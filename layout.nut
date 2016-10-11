@@ -142,15 +142,36 @@
 	local image= fe.add_image("wheel.jpg",0,0,fe.layout.width,fe.layout.height)
 	fe.add_artwork("snap",0,0,500,500);
 	local test = fe.add_artwork("snap",650,0,500,500);
-	
-	// CRT Shader
-    local sh = fe.add_shader( Shader.VertexAndFragment, "assets/shaders/sphere.vert", "assets/shaders/sphere.frag" );
+	local test2 = fe.add_artwork("snap",650,500,500,500);
+		
+	// Circle  Shader
+    local sh = fe.add_shader( Shader.VertexAndFragment, "assets/shaders/circle.vert", "assets/shaders/circle.frag" );
 	sh.set_param( "border_size", 0.01 )
 	sh.set_param( "disc_radius", 0.5 )
 	sh.set_param( "disc_color", 0, 0, 0 ,0 )
 	sh.set_param( "disc_center", 0.5, 0.5 )
-	// sh.set_param( "bkg_color", 0, 0, 0 ,0 );
-    // sh.set_param( "time", 0.5 );
 	sh.set_texture_param("tex0"); 
 	test.shader = sh;
 	
+	// Sphere  Shader
+    local sh = fe.add_shader( Shader.VertexAndFragment, "assets/shaders/sphere.vert", "assets/shaders/sphere.frag" );
+	sh.set_param( "bkg_color", 0, 0, 0 ,0 );
+    sh.set_param( "time", 0.5 );
+	sh.set_texture_param("tex0"); 
+	test2.shader = sh;
+	// {
+  // vec2 p = -1.0 + 2.0 * gl_TexCoord[0].xy;
+  // float r = sqrt(dot(p,p));
+  // if (r < 1.0)
+  // {
+    // vec2 uv;
+    // float f = (1.0-sqrt(1.0-r))/(r);
+    // uv.x = p.x*f + 0.1;
+    // uv.y = p.y*f + 0.1;
+    // gl_FragColor = vec4(texture2D(tex0,((uv.xy + 1.)/2.)).rgb,1.0);
+  // }
+  // else
+  // {
+    // gl_FragColor = bkg_color;
+  // }
+// }
