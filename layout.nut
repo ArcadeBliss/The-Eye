@@ -175,10 +175,7 @@ ChangeLog:
 
 		constructor()
 		{
-			local art = fe.add_artwork( "logo" );
-			art.video_flags = Vid.NoAudio;
-			
-			base.constructor( art );
+			base.constructor( fe.add_artwork( "logo" ) );
 		}
 
 		function on_progress( progress, var )
@@ -304,7 +301,7 @@ ChangeLog:
 		878 * scaling_factor,
 		877 * scaling_factor
 	);
-
+	
 	local sh = fe.add_shader( Shader.VertexAndFragment, "assets/shaders/sphere.vert", "assets/shaders/sphere.frag" );
 	sh.set_param( "bkg_color", 0, 0, 0 ,0 );
 	// sh.set_param( "time", 0.5 );
@@ -321,6 +318,7 @@ ChangeLog:
 	sh.set_param( "disc_center", 0.5, 0.5 )
 	sh.set_texture_param("tex0");
 	video.shader = sh;
+	
 
 	//
 	//	Load eye backdrop
@@ -413,4 +411,5 @@ ChangeLog:
 	//
 	ambient_sound = fe.add_sound("assets/mp3/lowhum.mp3");
 	ambient_sound.loop = true;
+	ambient_sound.playing = true;
 	
