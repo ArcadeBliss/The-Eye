@@ -10,6 +10,8 @@ ToDo
 - Turn off game sounds and use a looping low level hum
 - animate the eye to blink when changing filters are when first opening
 - make option: turn off fisheye effect
+- make sure the logos in the spinwheel have the right aspect
+
 ChangeLog:
 
 2016-09-19: Initial Draft
@@ -46,9 +48,9 @@ ChangeLog:
 		print(counter + ": FROM: "+ source + "\n");
 		counter++;
 	}
-	// fe.layout.width = 640;
-	// fe.layout.height = 480;
-	// fe.layout.preserve_aspect_ratio = true;
+	 // fe.layout.width = 800;
+	 // fe.layout.height = 600;
+	 // fe.layout.preserve_aspect_ratio = true;
 
 // Debuging --------------------------------------- END
 
@@ -79,7 +81,7 @@ ChangeLog:
 	local psdH_2_scrH = PSD_WIDTH * scrH.tofloat() / PSD_HEIGHT;	// shortcuts
 	
 	// Spinwheel Variables
-	local num_arts = 12;		// total number of artwork in the spinwheel
+	local num_arts = 20;		// total number of artwork in the spinwheel
 	local results = null;		// table holding the spinwheel settings
 	local wheel_entries = [];	// ConveyorSlot array to hold spinwheel slot info
 	local sw_settings = {		// used as input to autogenerate the values needed for the spinwheel
@@ -185,7 +187,7 @@ ChangeLog:
 
 		constructor()
 		{
-			base.constructor( fe.add_artwork( "logo" ) );
+			base.constructor( fe.add_artwork( "wheel" ) );
 		}
 
 		function on_progress( progress, var )
@@ -205,7 +207,7 @@ ChangeLog:
 			m_obj.height = wheel_h[slot] + p * ( wheel_h[slot+1] - wheel_h[slot] );
 			m_obj.rotation = wheel_r[slot] + p * ( wheel_r[slot+1] - wheel_r[slot] );
 			m_obj.alpha = wheel_a[slot] + p * ( wheel_a[slot+1] - wheel_a[slot] );
-
+			m_obj.preserve_aspect_ratio = true;
 		}
 	};
 
@@ -301,7 +303,7 @@ ChangeLog:
 	//
 	local fan_art = fe.add_artwork(
 		"fanart",
-		0 + offset_x,
+		PSD_WIDTH * 0.3 * scaling_factor + offset_x,
 		0 + offset_y,
 		viewportW,
 		viewportH
