@@ -155,7 +155,10 @@ ChangeLog:
 	sw_settings["sw_art"] = aspect_settings["sw_art"];
 	sw_settings["sw_art_scaling"] = aspect_settings["sw_art_scaling"];
 	
+	// set up sounds
 	local ambient_sound = null;		// background low frequency hum of the layout
+	local nav_sound = null;			// navigation shutter sound 
+	
 	
 	// Layout Variables ------------------------------- END
 
@@ -202,7 +205,14 @@ ChangeLog:
 // Setup Layout Classes --------------------------- END
 
 // Setup Layout options, functions and helpers ---- START
-	
+	function handler( signal_str )
+	{
+	   if ((signal_str =="prev_game") || (signal_str =="next_game"))
+	   {
+			nav_sound.playing = true;
+	   }
+	   return false;
+	}
 
 	function createSpinwheelStops( spinwheel_config )
 	{
@@ -408,9 +418,12 @@ ChangeLog:
 	try { conveyor.transition_ms = my_config["transition_ms"].tointeger(); } catch ( e ) { }
 
 	//
-	// load sounds
+	// Configure / Play sounds
 	//
 	ambient_sound = fe.add_sound("assets/mp3/lowhum.mp3");
 	ambient_sound.loop = true;
 	ambient_sound.playing = true;
+	nav_sound = fe.add_sound("assets/mp3/shutter.mp3");
+	fe.add_signal_handler("handler");
+	
 	
