@@ -9,7 +9,7 @@ ToDo
 - Determine user settings i.e. number of slots in the wheel / artwork to be used
 - Turn off game sounds and use a looping low level hum
 - animate the eye to blink when changing filters are when first opening
-
+- make option: turn off fisheye effect
 ChangeLog:
 
 2016-09-19: Initial Draft
@@ -92,7 +92,14 @@ ChangeLog:
 	}
 	
 	// Aspect Ratio settings
-	local scr16x10 = {};	// Settings for 16x10 screen aspect ratio					
+	local scr16x10 = {
+		viewportH = PSD_HEIGHT * psdW_2_scrW,
+		viewportW = scrW,
+		sw_radius = PSD_HEIGHT * psdW_2_scrW *0.6,
+		sw_center = {X = scrW + scrW * 0.1822, Y = PSD_HEIGHT * psdW_2_scrW * 0.4},
+		sw_art = {width = scrW*0.3125, height = scrH*0.1953},
+		sw_art_scaling = [0.20,0.40,1]
+	};	// Settings for 16x10 screen aspect ratio					
 	local scr4x3 = {};		// Settings for 4x3 screen aspect ratio					
 	local scr5x4 = {};		// Settings for 5x4 screen aspect ratio					
 	local scr3x4 = {};		// Settings for 3x4 screen aspect ratio	
@@ -205,10 +212,11 @@ ChangeLog:
 // Setup Layout Classes --------------------------- END
 
 // Setup Layout options, functions and helpers ---- START
-	function handler( signal_str )
+	function transition( ttype, var, transition_time )
 	{
-	   if ((signal_str =="prev_game") || (signal_str =="next_game"))
+	   if (ttype == Transition.EndNavigation )
 	   {
+			//(nav_sound.playing) ? null :  
 			nav_sound.playing = true;
 	   }
 	   return false;
@@ -300,17 +308,17 @@ ChangeLog:
 	);
 	fan_art.preserve_aspect_ratio = false;
 
-
 	//
 	//	Load snap as a sphere
 	//
-
-	local video = fe.add_artwork("snap",
-		132 * scaling_factor + offset_x,
-		240 * scaling_factor + offset_y,
-		878 * scaling_factor,
-		877 * scaling_factor
+	local video = fe.add_artwork(
+		"snap", 
+		109.5 * scaling_factor + offset_x,
+		214.5 * scaling_factor + offset_y,
+		924 * scaling_factor,
+		924 * scaling_factor
 	);
+	video.preserve_aspect_ratio = false;
 	video.video_flags = Vid.NoAudio;
 	
 	local sh = fe.add_shader( Shader.VertexAndFragment, "assets/shaders/sphere.vert", "assets/shaders/sphere.frag" );
@@ -319,16 +327,16 @@ ChangeLog:
 	sh.set_texture_param("tex0");
 	video.shader = sh;
 
-	//
-	//	Load snap as a disc
-	//
-	sh = fe.add_shader( Shader.VertexAndFragment, "assets/shaders/circle.vert", "assets/shaders/circle.frag" );
-	sh.set_param( "border_size", 0.01 )
-	sh.set_param( "disc_radius", 0.5 )
-	sh.set_param( "disc_color", 0, 0, 0 ,0 )
-	sh.set_param( "disc_center", 0.5, 0.5 )
-	sh.set_texture_param("tex0");
-	video.shader = sh;
+	// //
+	// //	Load snap as a disc
+	// //
+	// sh = fe.add_shader( Shader.VertexAndFragment, "assets/shaders/circle.vert", "assets/shaders/circle.frag" );
+	// sh.set_param( "border_size", 0.01 )
+	// sh.set_param( "disc_radius", 0.5 )
+	// sh.set_param( "disc_color", 0, 0, 0 ,0 )
+	// sh.set_param( "disc_center", 0.5, 0.5 )
+	// sh.set_texture_param("tex0");
+	// video.shader = sh;
 	
 
 	//
@@ -347,10 +355,10 @@ ChangeLog:
 	//
 	local inner_ring = fe.add_image(
 		"assets/uielements/INNER-ring.png",
-		132 * scaling_factor + offset_x,
-		240 * scaling_factor + offset_y,
-		878 * scaling_factor,
-		877 * scaling_factor
+		23 * scaling_factor + offset_x,
+		128 * scaling_factor + offset_y,
+		1097 * scaling_factor,
+		1097 * scaling_factor
 	);
 	 animation.add( PropertyAnimation( inner_ring,
 			 {
@@ -365,10 +373,10 @@ ChangeLog:
 	//
 	local outer_ring = fe.add_image(
 		"assets/uielements/OUTER-ring.png",
-		70 * scaling_factor + offset_x,
-		170 * scaling_factor + offset_y,
-		1028 * scaling_factor,
-		1013 * scaling_factor
+		23 * scaling_factor + offset_x,
+		128 * scaling_factor + offset_y,
+		1097 * scaling_factor,
+		1097 * scaling_factor
 	);
 	animation.add( PropertyAnimation( outer_ring,
 			{
@@ -424,6 +432,6 @@ ChangeLog:
 	ambient_sound.loop = true;
 	ambient_sound.playing = true;
 	nav_sound = fe.add_sound("assets/mp3/shutter.mp3");
-	fe.add_signal_handler("handler");
+	fe.add_transition_callback("transition");
 	
 	
