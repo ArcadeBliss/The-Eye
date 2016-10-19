@@ -154,9 +154,13 @@ ChangeLog:
 	sw_settings["sw_alpha"] = aspect_settings["sw_alpha"];
 	sw_settings["sw_art"] = aspect_settings["sw_art"];
 	sw_settings["sw_art_scaling"] = aspect_settings["sw_art_scaling"];
+<<<<<<< HEAD
 	
 	local ambient_sound = null;		// background low frequency hum of the layout
 	
+=======
+
+>>>>>>> origin/master
 	// Layout Variables ------------------------------- END
 
 // Setup Layout Classes --------------------------- START
@@ -301,8 +305,12 @@ ChangeLog:
 		878 * scaling_factor,
 		877 * scaling_factor
 	);
+<<<<<<< HEAD
 	video.video_flags = Vid.NoAudio;
 	
+=======
+
+>>>>>>> origin/master
 	local sh = fe.add_shader( Shader.VertexAndFragment, "assets/shaders/sphere.vert", "assets/shaders/sphere.frag" );
 	sh.set_param( "bkg_color", 0, 0, 0 ,0 );
 	// sh.set_param( "time", 0.5 );
@@ -319,7 +327,10 @@ ChangeLog:
 	sh.set_param( "disc_center", 0.5, 0.5 )
 	sh.set_texture_param("tex0");
 	video.shader = sh;
+<<<<<<< HEAD
 	
+=======
+>>>>>>> origin/master
 
 	//
 	//	Load eye backdrop
@@ -383,7 +394,10 @@ ChangeLog:
 		wheel_entries[i].wheel_a = results["a"];
 		wheel_entries[i].wheel_h = results["h"];
 		wheel_entries[i].wheel_r = results["r"];
+<<<<<<< HEAD
 		
+=======
+>>>>>>> origin/master
 	}
 
 	local remaining = num_arts - wheel_entries.len();
@@ -400,12 +414,16 @@ ChangeLog:
 		wheel_entries[num_arts/2].wheel_a = results["a"];
 		wheel_entries[num_arts/2].wheel_h = results["h"];
 		wheel_entries[num_arts/2].wheel_r = results["r"];
+<<<<<<< HEAD
 		
+=======
+>>>>>>> origin/master
 	}
 	local conveyor = Conveyor();
 	conveyor.set_slots( wheel_entries );
 	conveyor.transition_ms = 50;
 	try { conveyor.transition_ms = my_config["transition_ms"].tointeger(); } catch ( e ) { }
+<<<<<<< HEAD
 
 	//
 	// load sounds
@@ -414,3 +432,5 @@ ChangeLog:
 	ambient_sound.loop = true;
 	ambient_sound.playing = true;
 	
+=======
+>>>>>>> origin/master
