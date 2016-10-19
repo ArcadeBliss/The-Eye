@@ -301,6 +301,7 @@ ChangeLog:
 		878 * scaling_factor,
 		877 * scaling_factor
 	);
+	video.video_flags = Vid.NoAudio;
 	
 	local sh = fe.add_shader( Shader.VertexAndFragment, "assets/shaders/sphere.vert", "assets/shaders/sphere.frag" );
 	sh.set_param( "bkg_color", 0, 0, 0 ,0 );
