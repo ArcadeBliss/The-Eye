@@ -7,10 +7,10 @@
 
 ToDo
 - Determine user settings i.e. number of slots in the wheel / artwork to be used
-- Turn off game sounds and use a looping low level hum
+- ÓPTION: Turn off game sounds and use a looping low level hum
 - animate the eye to blink when changing filters are when first opening
-- make option: turn off fisheye effect
-- make sure the logos in the spinwheel have the right aspect
+- OPTION: turn off fisheye effect
+
 
 ChangeLog:
 
@@ -51,6 +51,10 @@ ChangeLog:
 	 // fe.layout.width = 800;
 	 // fe.layout.height = 600;
 	 // fe.layout.preserve_aspect_ratio = true;
+	 
+	  // fe.layout.width = 1280;
+	  // fe.layout.height = 800;
+	  // fe.layout.preserve_aspect_ratio = true;
 
 // Debuging --------------------------------------- END
 
@@ -77,11 +81,11 @@ ChangeLog:
 	local aspect = null;				// determine the current screen aspect ratio
 	local scrW = fe.layout.width;	 	//	current monitor width resolution
 	local scrH = fe.layout.height; 		// current monitor height resolution
-	local psdW_2_scrW =	scrW.tofloat() / PSD_WIDTH 					// shortcuts
+	local psdW_2_scrW =	PSD_HEIGHT * scrW.tofloat() / PSD_WIDTH 					// shortcuts
 	local psdH_2_scrH = PSD_WIDTH * scrH.tofloat() / PSD_HEIGHT;	// shortcuts
 	
 	// Spinwheel Variables
-	local num_arts = 20;		// total number of artwork in the spinwheel
+	local num_arts = 12;		// total number of artwork in the spinwheel
 	local results = null;		// table holding the spinwheel settings
 	local wheel_entries = [];	// ConveyorSlot array to hold spinwheel slot info
 	local sw_settings = {		// used as input to autogenerate the values needed for the spinwheel
@@ -92,26 +96,28 @@ ChangeLog:
 		sw_art		= null,		// table with the spinwheel art width and height {width = xxx, height = xxx},
 		sw_art_scaling = null,	// array scaleing factor to use for spinwheel art. [lowest scaling, highest scaling, scaling of the selected item]
 	}
-	
+
 	// Aspect Ratio settings
-	local scr16x10 = {
-		viewportH = PSD_HEIGHT * psdW_2_scrW,
+	local scr16x10 = { 		// Settings for 16x10 screen aspect ratio
+		viewportH = psdW_2_scrW,
 		viewportW = scrW,
-		sw_radius = PSD_HEIGHT * psdW_2_scrW *0.6,
-		sw_center = {X = scrW + scrW * 0.1822, Y = PSD_HEIGHT * psdW_2_scrW * 0.4},
+		offset_y = ((PSD_HEIGHT - 1200) /2) * (scrW.tofloat() / PSD_WIDTH) * -1,
+		scaling_factor = scrW.tofloat() / PSD_WIDTH,
+		sw_radius = psdW_2_scrW *0.6,
+		sw_center = {X = scrW + scrW * 0.1822, Y = psdW_2_scrW * 0.4},
 		sw_art = {width = scrW*0.3125, height = scrH*0.1953},
 		sw_art_scaling = [0.20,0.40,1]
-	};	// Settings for 16x10 screen aspect ratio					
+	};						
 	local scr4x3 = {};		// Settings for 4x3 screen aspect ratio					
 	local scr5x4 = {};		// Settings for 5x4 screen aspect ratio					
 	local scr3x4 = {};		// Settings for 3x4 screen aspect ratio	
 	local scr16x9 = {        // Settings for 16x9 screen aspect ratio    		
-		viewportH = PSD_HEIGHT * psdW_2_scrW,
+		viewportH = psdW_2_scrW,
 		viewportW = scrW,
-		scaling_factor =  psdW_2_scrW,
-		offset_y = PSD_HEIGHT * psdW_2_scrW * 0.203539823 / 2 * -1,
-		sw_radius = PSD_HEIGHT * psdW_2_scrW *0.6,
-		sw_center = {X = scrW + scrW * 0.1822, Y = PSD_HEIGHT * psdW_2_scrW * 0.4},
+		scaling_factor = scrW.tofloat() / PSD_WIDTH,
+		offset_y = ((PSD_HEIGHT - 1080) /2) * (scrW.tofloat() / PSD_WIDTH) * -1,
+		sw_radius = psdW_2_scrW *0.6,
+		sw_center = {X = scrW + scrW * 0.1822, Y = psdW_2_scrW * 0.4},
 		sw_art = {width = scrW*0.3125, height = scrH*0.1953},
 		sw_art_scaling = [0.20,0.40,1]
 	};				
@@ -124,7 +130,7 @@ ChangeLog:
 		offset_y = 0,
 		
 		// Spinwheel Settings 
-		sw_size = 180,
+		sw_size = 120,
 		sw_radius = scrH,
 		sw_center = {X=psdH_2_scrH + psdH_2_scrH * 0.4, Y = scrH * 0.5 - scrH * 0.03},
 		sw_alpha = [60, 100, 255],
@@ -247,7 +253,7 @@ ChangeLog:
 		
 		for (local i = 0; i < points; i++)
 		{
-			angle = angle_slice * i - 1.5708;
+			angle = angle_slice * i - (size / 2 * PI / 180);
 			newX = center.X - radius * cos(angle);
 			newY = center.Y + radius * sin(angle);
 			
@@ -297,7 +303,7 @@ ChangeLog:
 // ----------------------------------------
 //             Layout Theme Objects
 // ----------------------------------------
-
+debug("scale:"+scaling_factor)
 	//
 	//	Load fan art
 	//
