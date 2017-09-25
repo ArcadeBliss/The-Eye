@@ -1,6 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 // The Eye: Designed by verion / coded by ArcadeBliss
-// credits to omegaman for the wheel conveyour values
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* 
@@ -41,12 +40,15 @@ ChangeLog:
 	}
 
 // Debuging --------------------------------------- START
-
+	local toggle_debug = false;
 	local counter = 0;
 	function debug(source)
 	{
-		print(counter + ": FROM: "+ source + "\n");
-		counter++;
+		if (toggle_debug)
+		{
+			print(counter + ": FROM: "+ source + "\n");
+			counter++;
+		}
 	}
 	 // fe.layout.width = 800;
 	 // fe.layout.height = 600;
@@ -91,7 +93,7 @@ ChangeLog:
 	local sw_settings = {		// used as input to autogenerate the values needed for the spinwheel
 		sw_size 	= null,		// shape of the spinwheel circle in degrees
 		sw_radius = null,       // radius of the spinwheel in pixels
-		sw_center = null,       // a squirrel table with the spinwheel's center coordinate {X=0, Y=0}
+		sw_center = null,       // a squirrel table with the spinwheel's center coordinate {x=0, y=0}
 		sw_alpha 	= null,     // array with the alpha settings in the formate [lowest alpha, highest alpha, alpha selected item]
 		sw_art		= null,		// table with the spinwheel art width and height {width = xxx, height = xxx},
 		sw_art_scaling = null,	// array scaleing factor to use for spinwheel art. [lowest scaling, highest scaling, scaling of the selected item]
@@ -249,50 +251,55 @@ ChangeLog:
 		local alpha_slice = (alpha[1] - alpha[0]) / (points/2-1);
 		local artscale_slice = (artscale[1] - artscale[0]) / (points/2-1);
 		local test = null;
+		local direction = false; // true = right or up | false = left or down
+		local type = true;	// true = spinwheel | false = straight
 		
-		
-		for (local i = 0; i < points; i++)
+		if (type)
 		{
-			angle = angle_slice * i - (size / 2 * PI / 180);
-			newX = center.X - radius * cos(angle);
-			newY = center.Y + radius * sin(angle);
-			
-			results.x.push(newX);
-			results.y.push(newY);
-			results.r.push((angle * 180 / PI) *-1);
-			// test = fe.add_text("",newX.tointeger(),newY.tointeger(),300,10);
-			// test.rotation = (angle * 180 / PI) *-1;
-			// test.msg = "X:" + newX + " Y:" + newY + " Loop:" + i;
-			
-			if (i < points/2)
+			for (local i = 0; i < points; i++)
 			{
-				/* load the alpha channel, width, and height
-				of the wheel image from lowest configured value 
-				to heighest */
-				results.a.push(i*alpha_slice + alpha[0]);
-				results.w.push(((i*artscale_slice)+artscale[0])*artsize["width"]);
-				results.h.push(((i*artscale_slice)+artscale[0])*artsize["height"]);
+				angle = angle_slice * i - (size / 2 * PI / 180);
+				newX = (direction) ? center.X + radius * cos(angle) : center.X - radius * cos(angle);
+				newY = center.Y + radius * sin(angle);
 				
-			} else if (i > points/2) {
-				/* load the alpha channel, width, and height
-				of the wheel image from highest configured value 
-				to lowest */
-				results.a.push((points - i)*alpha_slice + alpha[0]);
-				results.w.push((((points - i)*artscale_slice)+ artscale[0])*artsize["width"]);
-				results.h.push((((points - i)*artscale_slice)+ artscale[0])*artsize["height"]);
-			} else {
-				/* load the configured selection value for the artwort alpha channel,
-				width, and height */	
-				results.a.push(alpha[2]);
-				results.w.push(artscale[2]*artsize["width"]);
-				results.h.push(artscale[2]*artsize["height"]);
+				results.x.push(newX);
+				results.y.push(newY);
+				(direction == "right") ? results.r.push((angle * 180 / PI)) : results.r.push((angle * 180 / PI) *-1);
+				// test = fe.add_text("",newX.tointeger(),newY.tointeger(),300,10);
+				// test.rotation = (angle * 180 / PI) *-1;
+				// test.msg = "X:" + newX + " Y:" + newY + " Loop:" + i;
 				
-				results.x[i]= results.x[i] - results.w[i]/4;	// center the selected item in the spinwheel
-				results.y[i]= results.y[i] - results.h[i]/3;	// center the selected item in the spinwheel
+				if (i < points/2)
+				{
+					/* load the alpha channel, width, and height
+					of the wheel image from lowest configured value 
+					to heighest */
+					results.a.push(i*alpha_slice + alpha[0]);
+					results.w.push(((i*artscale_slice)+artscale[0])*artsize["width"]);
+					results.h.push(((i*artscale_slice)+artscale[0])*artsize["height"]);
+					
+				} else if (i > points/2) {
+					/* load the alpha channel, width, and height
+					of the wheel image from highest configured value 
+					to lowest */
+					results.a.push((points - i)*alpha_slice + alpha[0]);
+					results.w.push((((points - i)*artscale_slice)+ artscale[0])*artsize["width"]);
+					results.h.push((((points - i)*artscale_slice)+ artscale[0])*artsize["height"]);
+				} else {
+					/* load the configured selection value for the artwort alpha channel,
+					width, and height */	
+					results.a.push(alpha[2]);
+					results.w.push(artscale[2]*artsize["width"]);
+					results.h.push(artscale[2]*artsize["height"]);
+					
+					results.x[i]= results.x[i] - results.w[i]/4;	// center the selected item in the spinwheel
+					results.y[i]= results.y[i] - results.h[i]/3;	// center the selected item in the spinwheel
+				}
+				
 			}
-			
+		} else {
+			null;
 		}
-			
 		return results;
 		
 	}
